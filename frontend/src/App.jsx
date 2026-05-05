@@ -1,8 +1,9 @@
-import { Toast } from "bootstrap";
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 const API = "https://pantry-backend-ndoy.onrender.com/api/notes"
 
@@ -10,20 +11,6 @@ function App() {
 
   const [title, setTitle] = useState("")
   const [things, setThings] = useState([])
-  const [toastMessage, setToastMessage] = useState("")
-
-  const showToast = (msg) => {
-
-  setToastMessage(msg);
-
-  const toastElement = document.getElementById("liveToast");
-
-  if (toastElement) {
-    const toast = new Toast(toastElement);
-    toast.show();
-  }
-
-};
 
   const getThings = async () => {
   try {
@@ -40,13 +27,13 @@ function App() {
     await axios.post(API, { title })
 
     setTitle("")
-    showToast("Item added")
+    toast.success(`Added`);
     getThings()
   }
 
   const deleteThing = async (id) => {
     await axios.delete(`${API}/${id}`)
-    showToast("Item deleted")
+    toast.success("Item Deleted");
     getThings()
   }
 
@@ -57,8 +44,7 @@ function App() {
     if (!newTitle) return
 
     await axios.put(`${API}/${id}`, { title: newTitle })
-
-    showToast("Item updated")
+    toast.success("Item updated");
     getThings()
   }
 
@@ -126,25 +112,6 @@ function App() {
 
         </ul>
 
-      </div>
-
-      {/* Toast */}
-      <div className="position-fixed bottom-0 end-0 p-3">
-        <div id="liveToast" className="toast text-bg-success border-0">
-
-          <div className="d-flex">
-
-            <div className="toast-body">
-              {toastMessage}
-            </div>
-
-            <button
-              className="btn-close btn-close-white me-2 m-auto"
-              data-bs-dismiss="toast">
-            </button>
-
-          </div>
-        </div>
       </div>
 
     </div>
