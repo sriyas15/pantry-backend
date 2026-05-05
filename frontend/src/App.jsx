@@ -22,30 +22,42 @@ function App() {
 }
   const addThing = async () => {
 
-    if (!title) return showToast("Enter item")
+    try {
+      if (!title) return toast("Enter item");
+      await axios.post(API, { title })
 
-    await axios.post(API, { title })
+      setTitle("");
+      toast.success(`Added`);
+      getThings();
 
-    setTitle("")
-    toast.success(`Added`);
-    getThings()
+    } catch (error) {
+      toast.error("Adding failed",error);
+    }
   }
 
   const deleteThing = async (id) => {
-    await axios.delete(`${API}/${id}`)
-    toast.success("Item Deleted");
-    getThings()
+    try {
+      await axios.delete(`${API}/${id}`);
+      toast.success("Item Deleted");
+      getThings();
+    } catch (error) {
+      toast.error("Deletion Failed",error);
+    }
   }
 
   const updateThing = async (id, currentTitle) => {
 
-    const newTitle = prompt("Update item", currentTitle)
+    try {
+      const newTitle = prompt("Update item", currentTitle)
 
-    if (!newTitle) return
+      if (!newTitle) return
 
-    await axios.put(`${API}/${id}`, { title: newTitle })
-    toast.success("Item updated");
-    getThings()
+      await axios.put(`${API}/${id}`, { title: newTitle })
+      toast.success("Item updated");
+      getThings();
+    } catch (error) {
+      toast.error("Update failed",error);
+    }
   }
 
   useEffect(() => {
